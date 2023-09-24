@@ -9,59 +9,59 @@ import ReactFlow, {
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import './App.css'
+import './App.css' 
 
+function createTree(numComments) {
+  let initialNodes = [
+    { id: '1', position: { x: 1, y: 1 }, data: { label: 'Cluster 1' } },
+  ];
+  // edges
+  let initialEdges = []
+  // create nodes/edges based on number of comments
+  for (let i = 2; i < numComments + 2; i++) {
+    initialNodes.push({ id: i.toString(), position: { x: 1, y: 1 }, data: { label: i.toString() } })
+    initialEdges.push({ id: 'e1-'+i.toString(), source: '1', target: i.toString() })
+  }
+  // initialize values
+  var angle = 2 * Math.PI / numComments;
+  var currAngle = 0;
+  var radius = 200;
+  // Updated positionsz
+  for (let i = 1; i < numComments + 1; i++) {
+    console.log(JSON.stringify(initialNodes[i].position));
+    initialNodes[i].position.x = Math.cos(currAngle) * radius;
+    console.log(Math.cos(currAngle)) 
+    initialNodes[i].position.y = Math.sin(currAngle) * radius;
+    console.log(JSON.stringify(initialNodes[i].position));
+    currAngle = currAngle + angle;
+  }
+  return [initialNodes, initialEdges]
+}
+console.log("VVVVVVVVVVVVVVVVVVVVVVVV")
+let [createdNodes, createdEdges] = createTree(8);
+console.log("UUUUUUUUUUUUUUUUUUUUUUUUUU")
+console.log(createdNodes)
+console.log(createdEdges)
+console.log("UUUUUUUUUUUUUUUUUUUUUUUUUU")
 
-// Set number of comments around center
-let numComments = 5;
-// nodes
-let initialNodes = [
-  { id: '1', position: { x: 1, y: 1 }, data: { label: 'Cluster 1' } },
-  { id: '2', position: { x: 1, y: 1 }, data: { label: '2' } },
-  { id: '3', position: { x: 1, y: 1 }, data: { label: '3' } },
-  { id: '4', position: { x: 1, y: 1 }, data: { label: '4' } },
-];
-// edges
-let initialEdges = [
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e1-3', source: '1', target: '3' },
-  { id: 'e1-4', source: '1', target: '4' },
-];
-// test node
-let initTestNodes = [{ id: '1', position: { x: 1, y: 1 }, data: { label: 'Cluster 1' } }]
-// test edges
-let initTestEdges = []
-// create nodes/edges based on number of comments
-for (let i = 2; i < numComments + 2; i++) {
-  console.log(i);
-  initTestNodes.push({ id: i.toString(), position: { x: 1, y: 1 }, data: { label: i.toString() } })
-  initTestEdges.push({ id: 'e1-'+i.toString(), source: '1', target: i.toString() })
-}
-console.log(initTestNodes)
-//pls work
-initialNodes = initTestNodes;
-initialEdges = initTestEdges;
-// initialize values
-var NodeNum = initialNodes.length - 1;
-var angle = 2 * Math.PI / NodeNum;
-var currAngle = 0;
-var radius = 200;
-// Updated positions
-for (let i = 1; i < NodeNum + 1; i++) {
-  console.log(i);
-  console.log(JSON.stringify(initialNodes[i].position));
-  initialNodes[i].position.x = Math.cos(currAngle) * radius;
-  console.log(Math.cos(currAngle)) 
-  initialNodes[i].position.y = Math.sin(currAngle) * radius;
-  console.log(JSON.stringify(initialNodes[i].position));
-  currAngle = currAngle + angle;
-}
 export default function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(createdNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(createdEdges);
 
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+
+  const onNodeClick = (event, node) => {
+    // Remove the clicked node and its connected edges
+    const elementsToRemove = [node, ...edges.filter((edge) => edge.source !== node.id && edge.target !== node.id)];
+    const updatedNodes = nodes.filter((n) => n.id !== node.id);
+
+    // Update the state with the new nodes and edges
+    let [createdNodes, createdEdges] = createTree(4);
+    setNodes(createdNodes);
+    setEdges(createdEdges);
+
+  };
 
   return (
     <div>
@@ -75,6 +75,7 @@ export default function App() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onNodeClick={onNodeClick}
         >
           <Controls />
           <MiniMap />
