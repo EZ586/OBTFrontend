@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import axios from 'axios';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -10,6 +11,50 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 import './App.css' 
+
+import {Comment} from './classes/Comment.js';
+import {GraphNode} from './classes/GraphNode.js'
+
+let CommentInstance = new Comment("Hello", "Tom");
+console.log(JSON.stringify(CommentInstance))
+
+// try {
+//   // get res
+//   const res2 = await axios.get('http://76a1-35-229-83-43.ngrok-free.app', 
+//     {headers: {
+//       'ngrok-skip-browser-warning': 'true', // Set the value as needed
+//     }
+//   });
+//   console.log("_________________________________")
+//   console.log(JSON.stringify(res2))
+
+// } catch (error) {
+//   console.log(error)
+// }
+
+// const url = 'http://62a1-35-239-212-66.ngrok-free.app/';
+
+// const res2 = await axios.get(url)
+// console.log("--------------------------------")
+// console.log(JSON.stringify(res2))
+// console.log("--------------------------------")
+
+// // Define custom headers
+// const headers = {
+//   'ngrok-skip-browser-warning': 'true', // Set the value as needed
+// };
+
+// // Send the HTTP request with custom headers
+// axios.get(url, { headers })
+//   .then(response => {
+//     // Handle the response data
+//     console.log(response.data);
+//   })
+//   .catch(error => {
+//     // Handle errors
+//     console.error('There was a problem with the request:', error);
+//   });
+
 
 function createTree(numComments) {
   let initialNodes = [
@@ -28,11 +73,8 @@ function createTree(numComments) {
   var radius = 200;
   // Updated positionsz
   for (let i = 1; i < numComments + 1; i++) {
-    console.log(JSON.stringify(initialNodes[i].position));
     initialNodes[i].position.x = Math.cos(currAngle) * radius;
-    console.log(Math.cos(currAngle)) 
     initialNodes[i].position.y = Math.sin(currAngle) * radius;
-    console.log(JSON.stringify(initialNodes[i].position));
     currAngle = currAngle + angle;
   }
   return [initialNodes, initialEdges]
@@ -52,10 +94,6 @@ export default function App() {
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   const onNodeClick = (event, node) => {
-    // Remove the clicked node and its connected edges
-    const elementsToRemove = [node, ...edges.filter((edge) => edge.source !== node.id && edge.target !== node.id)];
-    const updatedNodes = nodes.filter((n) => n.id !== node.id);
-
     // Update the state with the new nodes and edges
     let [createdNodes, createdEdges] = createTree(4);
     setNodes(createdNodes);
