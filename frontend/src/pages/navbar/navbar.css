@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    background-color: rgb(255, 122, 89);
+}
+
+.nav {
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+}
+
+.nav a {
+    margin-top: 35px;
+    margin-left: 20px;
+}
+
+
+
+
+
