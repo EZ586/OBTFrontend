@@ -14,6 +14,7 @@ const Navbar = (props) => {
           <Link to="/">Homepage</Link>
           <Link to="/old_mind_map">Old Mind Map</Link>
           <Link to="/mindmap">New Mind Map</Link>
+          <Link to="/maxmindmap">Max's test mind map</Link>
         </div>
       </div>
     </div>
