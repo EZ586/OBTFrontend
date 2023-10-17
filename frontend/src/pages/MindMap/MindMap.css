@@ -1,0 +1,14 @@
+.MindMap_Header {
+    background-color: aqua;
+    text-align: center;
+}
+
+.force-graph {
+    display:flex;
+    justify-content: center;
+}
+
+.mind-wrapper {
+    white-space: normal;
+    border-style:groove;
+}
